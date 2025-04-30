@@ -11,9 +11,11 @@ namespace VibeManager_Api
         {
             // Configuración y servicios de Web API
             config.Formatters.Remove(config.Formatters.XmlFormatter);
-            var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
-            json.SerializerSettings.PreserveReferencesHandling =
-                Newtonsoft.Json.PreserveReferencesHandling.All;
+            var json = config.Formatters.JsonFormatter;
+            json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None;
+            json.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            json.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+
 
             // Rutas de Web API
             config.MapHttpAttributeRoutes();
