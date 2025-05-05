@@ -1,0 +1,87 @@
+﻿@model IEnumerable<VibeManager_Api.Models.EVENTS>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.time)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.image)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.capacity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.seats)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.num_rows)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.num_columns)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.USERS.fullname)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.time)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.image)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.capacity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.seats)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.num_rows)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.num_columns)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.USERS.fullname)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>
