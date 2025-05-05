@@ -37,6 +37,7 @@ namespace VibeManager_Api.Controllers
                     e.seats,
                     e.num_rows,
                     e.num_columns,
+                    e.price,
                     Organizer = new
                     {
                         e.id_organizer,
@@ -68,6 +69,7 @@ namespace VibeManager_Api.Controllers
                     e.seats,
                     e.num_rows,
                     e.num_columns,
+                    e.price,
                     Organizer = new
                     {
                         e.USERS.id,
@@ -131,7 +133,8 @@ namespace VibeManager_Api.Controllers
                 seats = dto.Seats,
                 num_rows = dto.NumRows,
                 num_columns = dto.NumColumns,
-                id_organizer = dto.IdOrganizer
+                id_organizer = dto.IdOrganizer,
+                price = dto.price
             };
 
             db.EVENTS.Add(ev);

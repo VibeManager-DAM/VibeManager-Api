@@ -15,6 +15,7 @@ namespace VibeManager_Api.DTO
         public int Capacity { get; set; }
         public bool Seats { get; set; }
         public int? NumRows { get; set; }
+        public decimal price { get; set; }
         public int? NumColumns { get; set; }
         public int IdOrganizer { get; set; }
     }
