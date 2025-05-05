@@ -17,89 +17,72 @@ namespace VibeManager_Api.Controllers
     {
         private VibeEntities db = new VibeEntities();
 
-        // GET: api/SPACES
-        public IQueryable<SPACES> GetSPACES()
+        // GET: api/spaces
+        [HttpGet]
+        [Route("api/spaces")]
+        public async Task<IHttpActionResult> GetAllSpaces()
         {
-            return db.SPACES;
-        }
-
-        // GET: api/SPACES/5
-        [ResponseType(typeof(SPACES))]
-        public async Task<IHttpActionResult> GetSPACES(int id)
-        {
-            SPACES sPACES = await db.SPACES.FindAsync(id);
-            if (sPACES == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(sPACES);
-        }
-
-        // PUT: api/SPACES/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutSPACES(int id, SPACES sPACES)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != sPACES.id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(sPACES).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SPACESExists(id))
+            var spaces = await db.SPACES
+                .Select(s => new
                 {
-                    return NotFound();
-                }
-                else
+                    s.id,
+                    s.name,
+                    s.square_meters,
+                    s.capacity,
+                    s.address,
+                    s.latitude,
+                    s.longitude
+                })
+                .ToListAsync();
+
+            return Ok(spaces);
+        }
+
+        // GET: api/spaces/{id}
+        [HttpGet]
+        [Route("api/spaces/{id}")]
+        public async Task<IHttpActionResult> GetSpaceById(int id)
+        {
+            var space = await db.SPACES
+                .Where(s => s.id == id)
+                .Select(s => new
                 {
-                    throw;
-                }
-            }
+                    s.id,
+                    s.name,
+                    s.square_meters,
+                    s.capacity,
+                    s.address,
+                    s.latitude,
+                    s.longitude
+                })
+                .FirstOrDefaultAsync();
 
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/SPACES
-        [ResponseType(typeof(SPACES))]
-        public async Task<IHttpActionResult> PostSPACES(SPACES sPACES)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.SPACES.Add(sPACES);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = sPACES.id }, sPACES);
-        }
-
-        // DELETE: api/SPACES/5
-        [ResponseType(typeof(SPACES))]
-        public async Task<IHttpActionResult> DeleteSPACES(int id)
-        {
-            SPACES sPACES = await db.SPACES.FindAsync(id);
-            if (sPACES == null)
-            {
+            if (space == null)
                 return NotFound();
-            }
 
-            db.SPACES.Remove(sPACES);
-            await db.SaveChangesAsync();
+            return Ok(space);
+        }
 
-            return Ok(sPACES);
+        // GET: api/spaces/{id}/items
+        [HttpGet]
+        [Route("api/spaces/{id}/items")]
+        public async Task<IHttpActionResult> GetItemsBySpaceId(int id)
+        {
+            var spaceExists = await db.SPACES.AnyAsync(s => s.id == id);
+            if (!spaceExists)
+                return NotFound();
+
+            var items = await db.ITEMS
+                .Where(i => i.id_space == id)
+                .Select(i => new
+                {
+                    i.id,
+                    i.name_item,
+                    i.amount
+                })
+                .ToListAsync();
+
+            return Ok(items);
         }
 
         protected override void Dispose(bool disposing)
@@ -111,9 +94,5 @@ namespace VibeManager_Api.Controllers
             base.Dispose(disposing);
         }
 
-        private bool SPACESExists(int id)
-        {
-            return db.SPACES.Count(e => e.id == id) > 0;
-        }
     }
 }
