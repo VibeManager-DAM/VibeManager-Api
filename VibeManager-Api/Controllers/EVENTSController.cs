@@ -20,7 +20,7 @@ namespace VibeManager_Api.Controllers
 
         // GET: api/events
         [HttpGet]
-        [Route("events")]
+        [Route("api/events")]
         public async Task<IHttpActionResult> GetAllEvents()
         {
             var events = await db.EVENTS
@@ -50,7 +50,7 @@ namespace VibeManager_Api.Controllers
 
         // GET: api/events/{id}
         [HttpGet]
-        [Route("events/{id}")]
+        [Route("api/events/{id}")]
         public async Task<IHttpActionResult> GetEventDetails(int id)
         {
             var ev = await db.EVENTS
@@ -84,7 +84,7 @@ namespace VibeManager_Api.Controllers
 
         // GET: api/events/{id}/seats
         [HttpGet]
-        [Route("events/{id}/seats")]
+        [Route("api/events/{id}/seats")]
         public async Task<IHttpActionResult> GetEventSeats(int id)
         {
             var ev = await db.EVENTS.FindAsync(id);
@@ -117,7 +117,7 @@ namespace VibeManager_Api.Controllers
 
         // POST: api/events
         [HttpPost]
-        [Route("events")]
+        [Route("api/events")]
         public async Task<IHttpActionResult> CreateEvent(EventCreateDTO dto)
         {
             var ev = new EVENTS
@@ -158,11 +158,6 @@ namespace VibeManager_Api.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool EVENTSExists(int id)
-        {
-            return db.EVENTS.Count(e => e.id == id) > 0;
         }
     }
 }

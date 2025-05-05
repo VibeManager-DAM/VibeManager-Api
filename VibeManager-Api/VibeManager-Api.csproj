@@ -163,8 +163,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\CHATsController.cs" />
     <Compile Include="Controllers\EVENTSController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ITEMSController.cs" />
+    <Compile Include="Controllers\MESSAGESController.cs" />
+    <Compile Include="Controllers\ROLsController.cs" />
+    <Compile Include="Controllers\SPACESController.cs" />
+    <Compile Include="Controllers\TICKETSController.cs" />
     <Compile Include="Controllers\USERSController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTO\EventCreateDTO.cs" />
@@ -296,11 +302,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\EVENTS\Create.cshtml" />
-    <Content Include="Views\EVENTS\Delete.cshtml" />
-    <Content Include="Views\EVENTS\Details.cshtml" />
-    <Content Include="Views\EVENTS\Edit.cshtml" />
-    <Content Include="Views\EVENTS\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
