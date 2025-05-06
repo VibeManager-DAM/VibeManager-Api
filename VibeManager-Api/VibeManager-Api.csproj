@@ -171,6 +171,7 @@
     <Compile Include="Controllers\ROLsController.cs" />
     <Compile Include="Controllers\SPACESController.cs" />
     <Compile Include="Controllers\TICKETSController.cs" />
+    <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\USERSController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTO\EventCreateDTO.cs" />
@@ -205,6 +206,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ModelVibeManager.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RESERVES.cs">
+      <DependentUpon>ModelVibeManager.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ROL.cs">
       <DependentUpon>ModelVibeManager.tt</DependentUpon>
