@@ -17,6 +17,7 @@ namespace VibeManager_Api.Controllers
     public class USERSController : ApiController
     {
         private VibeEntities db = new VibeEntities();
+        
 
         // GET: api/users
         [HttpGet]
@@ -99,6 +100,7 @@ namespace VibeManager_Api.Controllers
         public async Task<IHttpActionResult> GetUserTickets(int id)
         {
             db.Configuration.LazyLoadingEnabled = false;
+            var baseImageUrl = "http://10.0.3.148/api/Imgs/";
 
             var userTickets = await db.USERS
                 .Where(u => u.id == id)
@@ -121,7 +123,7 @@ namespace VibeManager_Api.Controllers
                             t.EVENTS.date,
                             t.EVENTS.time,
                             t.EVENTS.capacity,
-                            t.EVENTS.image
+                            image = baseImageUrl + t.EVENTS.image,
                         }
                     }).ToList()
                 })
@@ -139,6 +141,7 @@ namespace VibeManager_Api.Controllers
         [Route("api/users/{id}/chats")]
         public async Task<IHttpActionResult> GetUserChats(int id)
         {
+            var baseImageUrl = "http://10.0.3.148/api/Imgs/";
             var chats = await db.CHAT
                 .Where(c => c.id_user == id)
                 .Select(c => new
@@ -146,7 +149,7 @@ namespace VibeManager_Api.Controllers
                     ChatId = c.id,
                     EventId = c.EVENTS.id,
                     EventTitle = c.EVENTS.title,
-                    EventImage = c.EVENTS.image
+                    image = baseImageUrl + c.EVENTS.image,
                 })
                 .ToListAsync();
 
