@@ -138,12 +138,23 @@ namespace VibeManager_Api.Controllers
         [Route("api/users/{id}/chats")]
         public async Task<IHttpActionResult> GetUserChats(int id)
         {
-            var user = await db.USERS.Include(u => u.CHAT).FirstOrDefaultAsync(u => u.id == id);
-            if (user == null) return NotFound();
+            var chats = await db.CHAT
+                .Where(c => c.id_user == id)
+                .Select(c => new
+                {
+                    EventId = c.EVENTS.id,
+                    EventTitle = c.EVENTS.title,
+                    EventImage = c.EVENTS.image
+                })
+                .Distinct()
+                .ToListAsync();
 
-            var chats = user.CHAT.ToList();
+            if (!chats.Any())
+                return NotFound();
+
             return Ok(chats);
         }
+
 
 
         // POST: api/users/login
