@@ -23,6 +23,7 @@ namespace VibeManager_Api.Controllers
         [Route("api/events")]
         public async Task<IHttpActionResult> GetAllEvents()
         {
+            var baseImageUrl = "http://10.0.3.148/api/Imgs/";
             var events = await db.EVENTS
                 .Include(e => e.id_organizer)
                 .Select(e => new
@@ -32,7 +33,7 @@ namespace VibeManager_Api.Controllers
                     e.description,
                     e.date,
                     e.time,
-                    e.image,
+                    image = baseImageUrl + e.image, 
                     e.capacity,
                     e.seats,
                     e.num_rows,
