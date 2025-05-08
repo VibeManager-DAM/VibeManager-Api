@@ -135,7 +135,7 @@ namespace VibeManager_Api.Controllers
 
         // GET: api/users/{id}/chats
         [HttpGet]
-        [Route("users/{id}/chats")]
+        [Route("api/users/{id}/chats")]
         public async Task<IHttpActionResult> GetUserChats(int id)
         {
             var user = await db.USERS.Include(u => u.CHAT).FirstOrDefaultAsync(u => u.id == id);
