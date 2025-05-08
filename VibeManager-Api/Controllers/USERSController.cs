@@ -120,7 +120,8 @@ namespace VibeManager_Api.Controllers
                             t.EVENTS.title,
                             t.EVENTS.date,
                             t.EVENTS.time,
-                            t.EVENTS.capacity
+                            t.EVENTS.capacity,
+                            t.EVENTS.image
                         }
                     }).ToList()
                 })
@@ -142,18 +143,22 @@ namespace VibeManager_Api.Controllers
                 .Where(c => c.id_user == id)
                 .Select(c => new
                 {
+                    ChatId = c.id,
                     EventId = c.EVENTS.id,
                     EventTitle = c.EVENTS.title,
                     EventImage = c.EVENTS.image
                 })
-                .Distinct()
                 .ToListAsync();
 
             if (!chats.Any())
+            {
                 return NotFound();
+            }
+                
 
             return Ok(chats);
         }
+
 
 
 
@@ -197,7 +202,7 @@ namespace VibeManager_Api.Controllers
             {
                 fullname = dto.fullname,
                 email = dto.email,
-                password = dto.password, // En producción: hashear la contraseña
+                password = dto.password, 
                 id_rol = dto.id_rol
             };
 
