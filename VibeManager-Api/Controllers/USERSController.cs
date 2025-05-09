@@ -179,7 +179,8 @@ namespace VibeManager_Api.Controllers
                     u.id,
                     u.fullname,
                     u.email,
-                    rol = u.ROL.name
+                    u.password,
+                    u.id_rol
                 })
                 .FirstOrDefaultAsync();
 
