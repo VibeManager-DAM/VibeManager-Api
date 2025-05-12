@@ -221,6 +221,43 @@ namespace VibeManager_Api.Controllers
             });
         }
 
+        // PUT: api/users/{id}
+        [HttpPut]
+        [Route("api/users/{id}")]
+        public async Task<IHttpActionResult> UpdateUser(int id, [FromBody] RegisterDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await db.USERS.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var emailExists = await db.USERS.AnyAsync(u => u.email == dto.email && u.id != id);
+            if (emailExists)
+            {
+                return BadRequest("El email ya está en uso por otro usuario.");
+            }
+             
+            user.fullname = dto.fullname;
+            user.email = dto.email;
+            user.password = dto.password;
+
+            await db.SaveChangesAsync();
+
+            return Ok(new
+            {
+                user.id,
+                user.fullname,
+                user.email
+            });
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
