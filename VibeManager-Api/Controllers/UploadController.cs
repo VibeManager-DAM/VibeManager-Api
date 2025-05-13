@@ -14,7 +14,7 @@ namespace VibeManager_Api.Controllers
     {
         [HttpPost]
         [Route("api/upload")]
-        public async Task<IHttpActionResult> UploadImage()
+        public async Task<IHttpActionResult> UploadMedia()
         {
             if (!Request.Content.IsMimeMultipartContent())
             {
@@ -26,41 +26,51 @@ namespace VibeManager_Api.Controllers
                 var provider = new MultipartMemoryStreamProvider();
                 await Request.Content.ReadAsMultipartAsync(provider);
 
-                // Directorio donde se almacenarán las imágenes
-                string directoryPath = HttpContext.Current.Server.MapPath("~/Imgs");
-
-                // Asegura que la carpeta existe
-                if (!Directory.Exists(directoryPath))
+                var allowedMimeTypes = new Dictionary<string, string>
                 {
-                    Directory.CreateDirectory(directoryPath);
-                }
+                    { "image/jpeg", "Imgs" },
+                    { "image/png", "Imgs" },
+                    { "image/gif", "Imgs" },
+                    { "image/jpg", "Imgs" },
+                    { "video/mp4", "Videos" },
+                    { "video/quicktime", "Videos" },
+                    { "audio/mpeg", "Audios" },
+                    { "audio/wav", "Audios" }
+                };
 
                 foreach (var file in provider.Contents)
                 {
                     var fileName = file.Headers.ContentDisposition.FileName.Trim('"');
+                    var mimeType = file.Headers.ContentType.MediaType;
 
-                    // Validación de tipo MIME (solo imágenes)
-                    var allowedMimeTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/jpg" };
-                    if (!allowedMimeTypes.Contains(file.Headers.ContentType.MediaType))
+                    // Validar tipo
+                    if (!allowedMimeTypes.ContainsKey(mimeType))
                     {
-                        return BadRequest("Invalid file type. Only images are allowed.");
+                        return BadRequest("Invalid file type. Only images, videos, and audios are allowed.");
+                    }
+
+                    string folder = allowedMimeTypes[mimeType];
+                    string directoryPath = HttpContext.Current.Server.MapPath($"~/{folder}");
+
+                    // Asegura que la carpeta existe
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
                     }
 
                     var buffer = await file.ReadAsByteArrayAsync();
-
-                    // Genera un nombre único para evitar sobrescribir archivos
                     string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(fileName);
                     string filePath = Path.Combine(directoryPath, uniqueFileName);
-
-                    // Guarda el archivo en el servidor
                     File.WriteAllBytes(filePath, buffer);
 
-                    // 🔥 Retornar la URL de la imagen subida
+                    string fileUrl = $"http://10.0.3.148/api/{folder}/{uniqueFileName}";
+
                     return Ok(new
                     {
-                        message = "Image uploaded successfully",
+                        message = $"{folder} uploaded successfully",
                         fileName = uniqueFileName,
-                        url = $"http://10.0.3.148/api/Imgs/{uniqueFileName}"
+                        url = fileUrl,
+                        type = mimeType
                     });
                 }
 
