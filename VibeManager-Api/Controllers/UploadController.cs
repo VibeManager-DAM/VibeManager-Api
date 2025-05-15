@@ -35,7 +35,10 @@ namespace VibeManager_Api.Controllers
                     { "video/mp4", "Videos" },
                     { "video/quicktime", "Videos" },
                     { "audio/mpeg", "Audios" },
-                    { "audio/wav", "Audios" }
+                    { "audio/wav", "Audios" },
+                    { "audio/mp3", "Audios" },
+                    { "audio/3gp", "Audios" },
+
                 };
 
                 foreach (var file in provider.Contents)
