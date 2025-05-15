@@ -117,6 +117,39 @@ namespace VibeManager_Api.Controllers
             return Ok(seats);
         }
 
+        // GET: api/events/organizer/{id}
+        [HttpGet]
+        [Route("api/events/organizer/{id}")]
+        public async Task<IHttpActionResult> GetAllEvents(int id)
+        {
+            try
+            {
+                var events = await (from e in db.EVENTS
+                                    join r in db.RESERVES on e.id equals r.id_event
+                                    join s in db.SPACES on r.id_space equals s.id
+                                    where e.id_organizer == id
+                                    select new
+                                    {
+                                        e.id,
+                                        e.title,
+                                        e.description,
+                                        e.date,
+                                        e.time,
+                                        e.image,
+                                        e.capacity,
+                                        e.seats,
+                                        e.num_rows,
+                                        e.num_columns,
+                                        s.name
+                                    }).ToListAsync();
+
+                return Ok(events);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(new Exception("Error al cargar eventos: " + ex.Message));
+            }
+        }
 
         // POST: api/events
         [HttpPost]
@@ -153,7 +186,6 @@ namespace VibeManager_Api.Controllers
 
             return Ok(new { ev.id, ev.title, ev.date });
         }
-
 
         protected override void Dispose(bool disposing)
         {

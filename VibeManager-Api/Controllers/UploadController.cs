@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
+using System.Runtime.ConstrainedExecution;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using VibeManager_Api.Models;
 
 namespace VibeManager_Api.Controllers
 {
@@ -37,16 +37,18 @@ namespace VibeManager_Api.Controllers
                     { "audio/mpeg", "Audios" },
                     { "audio/wav", "Audios" },
                     { "audio/mp3", "Audios" },
-                    { "audio/3gp", "Audios" },
-
+                    { "audio/3gpp", "Audios" }
                 };
 
                 foreach (var file in provider.Contents)
                 {
-                    var fileName = file.Headers.ContentDisposition.FileName.Trim('"');
-                    var mimeType = file.Headers.ContentType.MediaType;
+                    var fileName = file.Headers.ContentDisposition.FileName?.Trim('"') ?? "file";
+                    var extension = Path.GetExtension(fileName).ToLower();
+                    var mimeType = GetMimeTypeFromExtension(extension);
 
-                    // Validar tipo
+                    // Log para depuración
+                    System.Diagnostics.Debug.WriteLine($"Nombre: {fileName}, Extensión: {extension}, MIME detectado: {mimeType}");
+
                     if (!allowedMimeTypes.ContainsKey(mimeType))
                     {
                         return BadRequest("Invalid file type. Only images, videos, and audios are allowed.");
@@ -55,14 +57,13 @@ namespace VibeManager_Api.Controllers
                     string folder = allowedMimeTypes[mimeType];
                     string directoryPath = HttpContext.Current.Server.MapPath($"~/{folder}");
 
-                    // Asegura que la carpeta existe
                     if (!Directory.Exists(directoryPath))
                     {
                         Directory.CreateDirectory(directoryPath);
                     }
 
                     var buffer = await file.ReadAsByteArrayAsync();
-                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(fileName);
+                    string uniqueFileName = Guid.NewGuid().ToString() + extension;
                     string filePath = Path.Combine(directoryPath, uniqueFileName);
                     File.WriteAllBytes(filePath, buffer);
 
@@ -84,5 +85,25 @@ namespace VibeManager_Api.Controllers
                 return InternalServerError(ex);
             }
         }
+
+
+        private string GetMimeTypeFromExtension(string extension)
+        {
+            var mimeTypes = new Dictionary<string, string>
+            {
+                { ".jpeg", "image/jpeg" },
+                { ".jpg", "image/jpg" },
+                { ".png", "image/png" },
+                { ".gif", "image/gif" },
+                { ".mp4", "video/mp4" },
+                { ".mov", "video/quicktime" },
+                { ".mp3", "audio/mpeg" },
+                { ".wav", "audio/wav" },
+                { ".3gp", "audio/3gpp" } 
+            };
+
+            return mimeTypes.ContainsKey(extension) ? mimeTypes[extension] : "application/octet-stream";
+        }
+
     }
 }
